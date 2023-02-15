@@ -1,4 +1,4 @@
-const dataSource = require('./data-source')
+const dataSource = require('./data-source').default
 const queryRunner = dataSource.createQueryRunner()
 
 const addBuyOrder = async (productId, size, price, userId) => {

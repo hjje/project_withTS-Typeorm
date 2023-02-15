@@ -1,4 +1,4 @@
-const appDataSource = require('./data-source');
+const appDataSource = require('./data-source').default;
 
 const styleFilterSet = {
   'trending' : 'order by p.likes DESC',

@@ -1,4 +1,4 @@
-const productDao = require('../models/productDao')
+const productDao = require('../models/productDao.ㅅs')
 
 const getProductById = async (productId) => {
     try {

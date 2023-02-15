@@ -1,7 +1,7 @@
-const errMessages = require('./errorMessages')
+import errMessages from './errorMessages';
 
-const catchAsync = func => {
-	return (req, res, next) => {
+const catchAsync = (func :any) => {
+	return (req: any, res: any, next:any) => {
 		func(req, res, next).catch((error) => next({
             statusCode : errMessages[error.message]?.statusCode,
             message : errMessages[error.message]?.message
@@ -16,4 +16,4 @@ const globalErrorHandler = (err, req, res, next) => {
 }
 
 
-module.exports = { catchAsync, globalErrorHandler }
+export { catchAsync, globalErrorHandler}

@@ -1,4 +1,4 @@
-const dataSource = require('./data-source')
+import { appDataSource as dataSource } from './data-source'
 
 const getUserByKakaoId = async (id) => {
 	const result = await dataSource.query(`

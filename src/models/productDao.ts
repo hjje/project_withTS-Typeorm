@@ -1,4 +1,4 @@
-const dataSource = require('./data-source')
+const dataSource = require('./data-source').default
 const whereSet = {
     DEFAULT : '',
     TRUE : 'WHERE'

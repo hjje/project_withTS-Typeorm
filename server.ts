@@ -1,9 +1,9 @@
 require("dotenv").config();
 
-const { createApp } = require("./app");
-const  appDataSource  = require("./src/models/data-source");
+import { createApp } from "./app";
+import appDataSource from "./src/models/data-source";
 
-const setServer = async() => {
+export const setServer = async() => {
   const app = createApp();
   const PORT = process.env.PORT;
 
