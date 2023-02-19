@@ -1,8 +1,10 @@
-const userDao = require('../models/userDao')
-const jwt = require('jsonwebtoken')
-const axios = require('axios');
+import userDao from '../models/userDao';
+import jwt from 'jsonwebtoken';
+import axios from 'axios';
 
-const kakaoLogin = async (authCode) => {
+
+
+const kakaoLogin = async (authCode:any) => {
     const getKakaoToken = await axios.get('https://kauth.kakao.com/oauth/token', {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -26,30 +28,28 @@ const kakaoLogin = async (authCode) => {
     const email = getKakaoUserData.data.kakao_account.email
     const {profile_image: profileImage, nickname} = getKakaoUserData.data.properties
 
-    const isExist = await userDao.checkRegisteredAlready(kakaoId);
+    const isExist : any = await userDao.checkRegisteredAlready(kakaoId);
     
     let accessToken = '';
 
     if (!isExist) {
         await userDao.createUser(kakaoId, email, profileImage, nickname);
-        accessToken = jwt.sign({id: kakaoId}, process.env.JWT_SECRET,
+        accessToken = jwt.sign({id: kakaoId}, process.env.JWT_SECRET as string),
             {
                 algorithm: process.env.ALGORITHM,
                 expiresIn: process.env.JWT_EXPIRES_IN
             }
-        )
+        
     } else {
-        accessToken = jwt.sign({id: isExist.social_id}, process.env.JWT_SECRET,
+        accessToken = jwt.sign({id: isExist.social_id}, process.env.JWT_SECRET as string),
             {
                 algorithm: process.env.ALGORITHM,
                 expiresIn: process.env.JWT_EXPIRES_IN
             }
-        )
+        
     }
 
     return accessToken
 }
 
-module.exports = {
-   kakaoLogin
-}
+export { kakaoLogin }

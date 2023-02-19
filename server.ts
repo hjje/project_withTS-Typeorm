@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 import { createApp } from "./app";
-import appDataSource from "./src/models/data-source";
+import { appDataSource } from "./src/models/data-source";
 
 export const setServer = async() => {
   const app = createApp();

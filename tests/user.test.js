@@ -1,7 +1,8 @@
-const request = require("supertest");
-const axios = require('axios');
-const { createApp } = require("../app");
-const appDataSource = require("../src/models/data-source");
+import request from "supertest";
+import axios from 'axios';
+import { createApp } from "../app";
+import { appDataSource } from '../models/data-source'
+
 
 describe("Kakao Login", () => {
     let app;

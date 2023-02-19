@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-import * as express from 'express';
+import express from 'express';
 //export default 가 없으면 * as
 import { Request, Response, NextFunction, Application } from 'express';
 import cors from "cors";

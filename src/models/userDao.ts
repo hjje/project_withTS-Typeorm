@@ -1,6 +1,8 @@
 import { appDataSource as dataSource } from './data-source'
 
-const getUserByKakaoId = async (id) => {
+
+
+const getUserByKakaoId = async (id: string) => {
 	const result = await dataSource.query(`
 		SELECT 
 			id,
@@ -13,7 +15,7 @@ const getUserByKakaoId = async (id) => {
 	return result[0]
 }
 
-const checkRegisteredAlready = async (kakaoId) => {
+const checkRegisteredAlready = async (kakaoId: string) => {
     try{
         const [res] = await dataSource.query(`
             SELECT EXISTS(
@@ -29,7 +31,7 @@ const checkRegisteredAlready = async (kakaoId) => {
     }
 }
 
-const createUser = async (kakaoId, email, profileImage, nickname) => {
+const createUser = async (kakaoId: string, email:string, profileImage: string, nickname: string) => {
     try {
         await dataSource.query(`
             INSERT INTO users(
@@ -49,7 +51,7 @@ const createUser = async (kakaoId, email, profileImage, nickname) => {
     }
 }
 
-module.exports = {
+export default {
     getUserByKakaoId,
     checkRegisteredAlready,
     createUser

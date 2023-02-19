@@ -1,6 +1,6 @@
-const request = require("supertest");
-const { createApp } = require("../app");
-const appDataSource = require("../src/models/data-source");
+import request from "supertest";
+import { createApp } from "../app";
+import {appDataSource} from "../src/models/data-source";
 
 describe("GET Products", () => {
     let app;

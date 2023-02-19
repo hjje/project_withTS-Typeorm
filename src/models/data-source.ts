@@ -1,19 +1,18 @@
-import { DatabaseType, DataSource } from "typeorm";
-
-// type Config = {
-//   type: DatabaseType,
-//   host: string,
-//   port: number,
-//   username: string,
-//   password: string,
-//   database: string
-// }
+import { DataSource } from "typeorm";
+import { User } from "../migrations/User";
+// import config from '../config/config';
+require("dotenv").config();
 
 export const appDataSource = new DataSource({
-  type: process.env.TYPEORM_CONNECTION,
-  host: process.env.TYPEORM_HOST,
-  port: process.env.TYPEORM_PORT,
-  username: process.env.TYPEORM_USERNAME,
-  password: process.env.TYPEORM_PASSWORD,
-  database: process.env.TYPEORM_DATABASE
-});
+  type: "mysql",
+  host: "localhost",
+  port: 3000,
+  username: "root",
+  password: "Qwer!234",
+  database: "icecream_test_db",
+  synchronize: true,
+  logging: true,
+  entities: [User],
+  subscribers: [],
+  migrations: [],
+})

@@ -1,4 +1,9 @@
-module.exports = {
+
+interface TypeOfError  {
+    [x: string]: {statusCode: number; message:string;}
+    }
+
+const errorMessages: TypeOfError = {
     //* GLOBAL
         keyErr : {
             statusCode : 400,
@@ -65,3 +70,5 @@ module.exports = {
             message : "SAME_USER"
         },
 }
+
+export default errorMessages;

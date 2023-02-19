@@ -1,7 +1,8 @@
-const dataSource = require('./data-source').default
+import { appDataSource as dataSource } from './data-source'
+
 const queryRunner = dataSource.createQueryRunner()
 
-const addBuyOrder = async (productId, size, price, userId) => {
+const addBuyOrder = async (productId: any, size: any, price: any, userId: any) => {
     try {
         await queryRunner.connect()
         await queryRunner.startTransaction()
@@ -10,11 +11,11 @@ const addBuyOrder = async (productId, size, price, userId) => {
             SELECT 
                 b.id,
                 b.user_id
-            FROM 
+            FROM
                 bids AS b
             LEFT JOIN options AS op ON b.option_id = op.id
             LEFT JOIN products AS p ON p.id = op.product_id
-            WHERE 
+            WHERE
                 b.price = ?
                 AND b.type_id = 2
                 AND op.size = ?
@@ -53,7 +54,7 @@ const addBuyOrder = async (productId, size, price, userId) => {
     }
 }
 
-const addBuyBid = async (productId, size, price, userId) => {
+const addBuyBid = async (productId: any, size: any, price: any, userId: any) => {
 
     try {
         const getOptionId = await dataSource.query(`
@@ -86,7 +87,7 @@ const addBuyBid = async (productId, size, price, userId) => {
     }
 }
 
-const addSellOrder = async (productId, size, price, userId) => {
+const addSellOrder = async (productId: any, size: any, price: any, userId: any) => {
     try {
         await queryRunner.connect()
         await queryRunner.startTransaction()
@@ -138,7 +139,7 @@ const addSellOrder = async (productId, size, price, userId) => {
     }
 }
 
-const addSellBid = async (productId, size, price, userId) => {
+const addSellBid = async (productId: any, size: any, price: any, userId: any) => {
     try {
         const getOptionId = await dataSource.query(`
             SELECT
