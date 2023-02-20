@@ -3,8 +3,7 @@ import jwt from 'jsonwebtoken';
 import axios from 'axios';
 
 
-
-const kakaoLogin = async (authCode:any) => {
+const kakaoLogin = async (authCode:string) => {
     const getKakaoToken = await axios.get('https://kauth.kakao.com/oauth/token', {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -41,6 +40,7 @@ const kakaoLogin = async (authCode:any) => {
             }
         
     } else {
+     
         accessToken = jwt.sign({id: isExist.social_id}, process.env.JWT_SECRET as string),
             {
                 algorithm: process.env.ALGORITHM,

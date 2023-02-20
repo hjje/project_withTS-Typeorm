@@ -2,8 +2,9 @@ import { kakaoLogin as _kakaoLogin } from '../services/userService';
 import { catchAsync } from '../utils/error';
 import { Request, Response } from "express";
 
+
 const kakaoLogin = catchAsync(async (req:Request, res:Response) => {
-    const authCode = req.query.code;
+    const authCode : string = req.query.code as string
 
     if (!authCode) throw new Error('missingAuthCode');
 
