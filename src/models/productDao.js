@@ -1,35 +1,35 @@
-const dataSource = require(‘./data-source’)
+const dataSource = require('./data-source')
 const whereSet = {
-    DEFAULT : ‘’,
-    TRUE : ‘WHERE’
+    DEFAULT : '',
+    TRUE : 'WHERE'
 }
 const andSet = {
-    DEFAULT : ‘’,
-    TRUE : ‘AND’
+    DEFAULT : '',
+    TRUE : 'AND'
 }
 const joinSet = {
-    DEFAULT : ‘’,
-    OPTIONS : ‘LEFT JOIN options AS op ON op.product_id = p.id’,
-    BIDS : ‘LEFT JOIN bids AS b ON op.id = b.option_id’
+    DEFAULT : '',
+    OPTIONS : 'LEFT JOIN options AS op ON op.product_id = p.id',
+    BIDS : 'LEFT JOIN bids AS b ON op.id = b.option_id'
 }
 const getAllProducts = async (categoryId, size, orderBy) => {
     try {
         const categorySet = {
-            DEFAULT : ‘’,
+            DEFAULT : '',
             [categoryId] : `p.category_id = ${categoryId}`,
         }
         const sizeSet = {
-            DEFAULT : ‘’,
-            [size] : `op.size = ‘${size}’`,
+            DEFAULT : '',
+            [size] : `op.size = '${size}'`,
         }
         if(!categoryId && !size)
-            {joinOption = ‘DEFAULT’; where = ‘DEFAULT’; categoryId = ‘DEFAULT’; and = ‘DEFAULT’; size = ‘DEFAULT’; and2 = ‘DEFAULT’;}
+            {joinOption = 'DEFAULT'; where = 'DEFAULT'; categoryId = 'DEFAULT'; and = 'DEFAULT'; size = 'DEFAULT'; and2 = 'DEFAULT';}
         else if(categoryId && !size)
-            {joinOption = ‘DEFAULT’; where = ‘TRUE’; categoryId; and = ‘DEFAULT’; size = ‘DEFAULT’; and2 = ‘DEFAULT’;}
+            {joinOption = 'DEFAULT'; where = 'TRUE'; categoryId; and = 'DEFAULT'; size = 'DEFAULT'; and2 = 'DEFAULT';}
         else if(size && !categoryId)
-            {joinOption = ‘OPTIONS’; where = ‘TRUE’; categoryId = ‘DEFAULT’; and = ‘DEFAULT’; size; and2 = ‘TRUE’;}
+            {joinOption = 'OPTIONS'; where = 'TRUE'; categoryId = 'DEFAULT'; and = 'DEFAULT'; size; and2 = 'TRUE';}
         else if(categoryId && size)
-            {joinOption = ‘OPTIONS’; where = ‘TRUE’; categoryId; and = ‘TRUE’; size; and2 = ‘TRUE’;}
+            {joinOption = 'OPTIONS'; where = 'TRUE'; categoryId; and = 'TRUE'; size; and2 = 'TRUE';}
         const getProductId = await dataSource.query(`
             SELECT p.id FROM products AS p
             ${joinSet[joinOption]}
@@ -54,7 +54,7 @@ const getAllProducts = async (categoryId, size, orderBy) => {
             `, [getProductId[i].id]
             )
             if (!getPrices) {
-                returnData.push({id : getProductId[i].id, price : ‘’})
+                returnData.push({id : getProductId[i].id, price : ''})
             } else {
                 returnData.push({id : getProductId[i].id, price : getPrices.price})
             }
@@ -80,22 +80,22 @@ const getAllProducts = async (categoryId, size, orderBy) => {
         }
         if (!orderBy) {
             returnData = returnData
-        } else if (orderBy == ‘priceHighToLow’) {
+        } else if (orderBy == 'priceHighToLow') {
             let arr = [];
             for (let i=0; i<returnData.length; i++) {
-                if (returnData[i].price !== ‘’) {
+                if (returnData[i].price !== '') {
                     arr.push(returnData[i])
                 }
             }
             arr.sort((a, b) => b.price - a.price)
             returnData = arr;
-        } else if (orderBy == ‘releaseDate’) {
+        } else if (orderBy == 'releaseDate') {
             returnData = returnData.sort((a, b) => b.releaseDate - a.releaseDate)
         }
         return returnData
     } catch (err){
         console.log(err)
-        throw new Error(‘getAllProductsErr’)
+        throw new Error('getAllProductsErr')
     }
 }
 const getConstantProductDataById = async (productId) => {
@@ -115,7 +115,7 @@ const getConstantProductDataById = async (productId) => {
             b.type_id = 2
         ORDER BY b.price ASC
     `)
-    if (!x) x = {price : ‘’}
+    if (!x) x = {price : ''}
     let [y] =  await dataSource.query(`
         SELECT
             b.price
@@ -132,7 +132,7 @@ const getConstantProductDataById = async (productId) => {
             b.type_id = 1
         ORDER BY b.price DESC
     `)
-    if (!y) y = {price : ‘’}
+    if (!y) y = {price : ''}
     let [z] = await dataSource.query(`
         SELECT
             JSON_ARRAYAGG(i.image_url) AS imageUrl
@@ -147,7 +147,7 @@ const getConstantProductDataById = async (productId) => {
     let imgArr = [];
     for (let i=0; i<z.imageUrl.length; i++) {
         imgArr.push({
-            alt : ‘alt’,
+            alt : 'alt',
             url : z.imageUrl[i]
         })
     }
@@ -161,7 +161,7 @@ const getConstantProductDataById = async (productId) => {
             p.recent_trade_price AS recentTradePrice,
             p.model_number AS modelNumber,
             p.category_id AS categoryId,
-            DATE_FORMAT(p.release_date, ‘%y/%m/%d’) AS releaseDate,
+            DATE_FORMAT(p.release_date, '%y/%m/%d') AS releaseDate,
             p.color,
             p.original_price AS originalPrice
         FROM
@@ -185,7 +185,7 @@ const getProductTradeDataById = async (productId) => {
         SELECT
             (@rownum:=@rownum + 1) AS id,
             op.size,
-            DATE_FORMAT(o.created_at, ‘%Y/%m/%d’) AS date,
+            DATE_FORMAT(o.created_at, '%Y/%m/%d') AS date,
             o.amount AS price
         FROM orders AS o
         LEFT JOIN bids AS b ON o.bid_id = b.id
@@ -200,7 +200,7 @@ const getProductTradeDataById = async (productId) => {
         SELECT
             (@rownum:=@rownum + 1) AS id,
             op.size,
-            DATE_FORMAT(b.created_at, ‘%Y/%m/%d’) AS date,
+            DATE_FORMAT(b.created_at, '%Y/%m/%d') AS date,
             b.price AS price
         FROM bids AS b
         LEFT JOIN options AS op ON op.id = b.option_id
@@ -214,7 +214,7 @@ const getProductTradeDataById = async (productId) => {
         SELECT
             (@rownum:=@rownum + 1) AS id,
             op.size,
-            DATE_FORMAT(b.created_at, ‘%Y/%m/%d’) AS date,
+            DATE_FORMAT(b.created_at, '%Y/%m/%d') AS date,
             b.price AS price
         FROM bids AS b
         LEFT JOIN options AS op ON op.id = b.option_id
@@ -241,7 +241,7 @@ const getProductChartDataById = async (productId) => {
     const getBidIdAndAvgPrice = await dataSource.query(`
         SELECT
             AVG(o.amount) AS amount,
-            DATE_FORMAT(o.created_at, ‘%Y/%m/%d’) AS date
+            DATE_FORMAT(o.created_at, '%Y/%m/%d') AS date
         FROM orders AS o
         LEFT JOIN bids AS b ON o.bid_id = b.id
         LEFT JOIN options AS op ON b.option_id = op.id
