@@ -9,7 +9,6 @@ import morgan from "morgan";
 import { routes } from "./src/routes";
 import { globalErrorHandler } from "./src/utils/error";
 
-
 export const createApp = (): Application => {
   const app = express();
 

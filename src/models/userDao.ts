@@ -1,7 +1,6 @@
 import { appDataSource as dataSource } from './data-source'
 
 
-
 const getUserByKakaoId = async (id: string) => {
 	const result = await dataSource.query(`
 		SELECT 

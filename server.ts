@@ -1,25 +1,28 @@
 require("dotenv").config();
 
 import { createApp } from "./app";
-import { appDataSource } from "./src/models/data-source";
+import { DataSource } from "typeorm"
 
-export const setServer = async() => {
-  const app = createApp();
-  const PORT = process.env.PORT;
+  const app = createApp()
+  const PORT = process.env.PORT
+const AppDataSource = new DataSource(
+  {
+  
+    type: "mysql",
+    host: "127.0.0.1",
+    port: 3306,
+    username: "root",
+    password: "Qwer!234",
+    database: "icecreamDB",
+})
 
-  appDataSource
-  .initialize()
-  .then(() => {
-    console.log("Data Source has been initialized!");
-  })
-  .catch(() => {
-    console.log("Error: Data Source initialization has been failed");
-  });
-
-  app.listen(PORT, () => {
-    console.log(`Listening on Port ${PORT}`);
-  });
-
-};
-
-setServer();
+AppDataSource.initialize()
+    .then(() => {
+        console.log("Data Source has been initialized!")
+    })
+    .catch((err) => {
+        console.error("Error during Data Source initialization", err)
+    })
+    app.listen(PORT, () => {
+          console.log(`Listening on Port ${PORT}`)
+        });

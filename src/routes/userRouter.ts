@@ -1,12 +1,9 @@
 import { Router } from 'express';
 import userController from '../controllers/userController';
 
-const router = Router();
+const routes = Router();
 
-router.post('/login', userController.kakaoLogin);
+routes.post('/login', userController.kakaoLogin);
 
-export { router };
+export { routes };
 
-export function routes(_arg0: string, _routes: any) {
-    throw new Error("Function not implemented.");
-}

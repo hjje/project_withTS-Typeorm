@@ -5,14 +5,14 @@ require("dotenv").config();
 
 export const appDataSource = new DataSource({
   type: "mysql",
-  host: "localhost",
+  host: "127.0.0.1",
   port: 3000,
   username: "root",
   password: "Qwer!234",
-  database: "icecream_test_db",
+  database: "icecreamDB",
   synchronize: true,
   logging: true,
-  entities: [User],
-  subscribers: [],
-  migrations: [],
+  // entities: [User],
+  // subscribers: [],
+  // migrations: [],
 })

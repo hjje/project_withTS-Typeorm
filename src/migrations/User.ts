@@ -10,7 +10,6 @@ constructor(n:number , t:string){
     this.name =t;
 }
 
-
     @PrimaryGeneratedColumn()
     id: number
 
