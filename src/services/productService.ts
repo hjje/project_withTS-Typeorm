@@ -1,6 +1,6 @@
 import productDao from '../models/productDao'
 
-const getProductById = async (productId: any) => {
+const getProductById = async (productId: number) => {
     try {
         const productData = await productDao.getConstantProductDataById(productId)
         const tradeAll = await productDao.getProductTradeDataById(productId)
@@ -17,7 +17,7 @@ const getProductById = async (productId: any) => {
     }
 }
 
-const getAllProducts = async (categoryId: any, size: any, orderBy: any) => {
+const getAllProducts = async (categoryId : any, size: string, orderBy: string) => {
     return await productDao.getAllProducts(categoryId, size, orderBy)
 }
 

@@ -23,13 +23,13 @@ const getAllProducts = async (categoryId: string, size: string, orderBy: string)
             [size] : `op.size = '${size}'`,
         }
         if(!categoryId && !size)
-            {joinOption = 'DEFAULT'; where = 'DEFAULT'; categoryId = 'DEFAULT'; and = 'DEFAULT'; size = 'DEFAULT'; and2 = 'DEFAULT';}
+            {const joinOption = 'DEFAULT'; const where = 'DEFAULT'; categoryId = 'DEFAULT'; const and = 'DEFAULT'; size = 'DEFAULT'; const and2 = 'DEFAULT';}
         else if(categoryId && !size)
-            {joinOption = 'DEFAULT'; where = 'TRUE'; categoryId; and = 'DEFAULT'; size = 'DEFAULT'; and2 = 'DEFAULT';}
+            {const joinOption = 'DEFAULT'; const where = 'TRUE'; categoryId; const and = 'DEFAULT'; size = 'DEFAULT'; const and2 = 'DEFAULT';}
         else if(size && !categoryId)
-            {joinOption = 'OPTIONS'; where = 'TRUE'; categoryId = 'DEFAULT'; and = 'DEFAULT'; size; and2 = 'TRUE';}
+            {const joinOption = 'OPTIONS'; const where = 'TRUE'; categoryId = 'DEFAULT'; const and = 'DEFAULT'; size; const and2 = 'TRUE';}
         else if(categoryId && size)
-            {joinOption = 'OPTIONS'; where = 'TRUE'; categoryId; and = 'TRUE'; size; and2 = 'TRUE';}
+            {const joinOption = 'OPTIONS'; const where = 'TRUE'; categoryId; const and = 'TRUE'; size; const and2 = 'TRUE';}
         const getProductId = await dataSource.query(`
             SELECT p.id FROM products AS p
             ${joinSet[joinOption]}
