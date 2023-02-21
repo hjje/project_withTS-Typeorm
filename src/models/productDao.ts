@@ -12,7 +12,7 @@ const joinSet = {
     OPTIONS : 'LEFT JOIN options AS op ON op.product_id = p.id',
     BIDS : 'LEFT JOIN bids AS b ON op.id = b.option_id'
 }
-const getAllProducts = async (categoryId, size, orderBy) => {
+const getAllProducts = async (categoryId: string, size: string, orderBy: string) => {
     try {
         const categorySet = {
             DEFAULT : '',
@@ -22,13 +22,13 @@ const getAllProducts = async (categoryId, size, orderBy) => {
             DEFAULT : '',
             [size] : `op.size = '${size}'`,
         }
-        if(!categoryId && !size) 
+        if(!categoryId && !size)
             {joinOption = 'DEFAULT'; where = 'DEFAULT'; categoryId = 'DEFAULT'; and = 'DEFAULT'; size = 'DEFAULT'; and2 = 'DEFAULT';}
         else if(categoryId && !size)
             {joinOption = 'DEFAULT'; where = 'TRUE'; categoryId; and = 'DEFAULT'; size = 'DEFAULT'; and2 = 'DEFAULT';}
-        else if(size && !categoryId) 
+        else if(size && !categoryId)
             {joinOption = 'OPTIONS'; where = 'TRUE'; categoryId = 'DEFAULT'; and = 'DEFAULT'; size; and2 = 'TRUE';}
-        else if(categoryId && size) 
+        else if(categoryId && size)
             {joinOption = 'OPTIONS'; where = 'TRUE'; categoryId; and = 'TRUE'; size; and2 = 'TRUE';}
         const getProductId = await dataSource.query(`
             SELECT p.id FROM products AS p
@@ -49,7 +49,7 @@ const getAllProducts = async (categoryId, size, orderBy) => {
                 AND b.type_id = 2
                 AND b.id NOT IN (SELECT bid_id FROM orders)
                 ${andSet[and2]}
-                ${sizeSet[size]}              
+                ${sizeSet[size]}
                 ORDER BY b.price ASC;
             `, [getProductId[i].id]
             )
@@ -92,16 +92,14 @@ const getAllProducts = async (categoryId, size, orderBy) => {
         } else if (orderBy == 'releaseDate') {
             returnData = returnData.sort((a, b) => b.releaseDate - a.releaseDate)
         }
-        return returnData   
+        return returnData
     } catch (err){
         console.log(err)
         throw new Error('getAllProductsErr')
     }
 }
-
-const getConstantProductDataById = async (productId) => {
-    
-    let [getBuyNowPrice] =  await dataSource.query(`
+const getConstantProductDataById = async (productId: any) => {
+    let [x] =  await dataSource.query(`
         SELECT
             b.price
         FROM
@@ -110,17 +108,15 @@ const getConstantProductDataById = async (productId) => {
         LEFT JOIN products AS p ON op.product_id = p.id
         LEFT JOIN orders AS o ON o.bid_id = b.id
         WHERE
-            p.id = ?
-        AND 
+            p.id = ${productId}
+        AND
             b.id NOT IN (SELECT bid_id FROM orders)
         AND
             b.type_id = 2
         ORDER BY b.price ASC
-        `, [productId]
-    )
-    if (!getBuyNowPrice) getBuyNowPrice = {price : ''}
-
-    let [getSellNowPrice] =  await dataSource.query(`
+    `)
+    if (!x) x = {price : ''}
+    let [y] =  await dataSource.query(`
         SELECT
             b.price
         FROM
@@ -129,17 +125,15 @@ const getConstantProductDataById = async (productId) => {
         LEFT JOIN products AS p ON op.product_id = p.id
         LEFT JOIN orders AS o ON o.bid_id = b.id
         WHERE
-            p.id = ?
-        AND 
+            p.id = ${productId}
+        AND
             b.id NOT IN (SELECT bid_id FROM orders)
         AND
             b.type_id = 1
         ORDER BY b.price DESC
-        `, [productId]
-    )
-    if (!getSellNowPrice) getSellNowPrice = {price : ''}
+    `)
 
-    let [getImages] = await dataSource.query(`
+    let [z] = await dataSource.query(`
         SELECT
             JSON_ARRAYAGG(i.image_url) AS imageUrl
         FROM
@@ -150,17 +144,14 @@ const getConstantProductDataById = async (productId) => {
             p.id = ?
         `, [productId]
     )
-
     let imgArr = [];
-    
-    for (let i=0; i<getImages.imageUrl.length; i++) {
+    for (let i=0; i<z.imageUrl.length; i++) {
         imgArr.push({
             alt : 'alt',
-            url : getImages.imageUrl[i]
+            url : z.imageUrl[i]
         })
     }
-
-    const [productData] = await dataSource.query(`
+    const main = await dataSource.query(`
         SELECT
             p.id,
             b.name AS brandName,
@@ -181,15 +172,12 @@ const getConstantProductDataById = async (productId) => {
             p.id = ?
         `, [productId]
     )
-
-    productData.buyNow = getBuyNowPrice.price
-    productData.sellNow = getSellNowPrice.price
-    productData.images = imgArr
-
-    return productData
+    main[0].buyNow = x.price
+    main[0].sellNow = y.price
+    main[0].images = imgArr
+    return main[0]
 }
-
-const getProductTradeDataById = async (productId) => {
+const getProductTradeDataById = async (productId: any) => {
     await dataSource.query(`
         SET @rownum:=0
     `)
@@ -247,10 +235,9 @@ const getProductTradeDataById = async (productId) => {
             tradeDataLimit,
             buyBidDataLimit,
             sellBidDataLimit}]
-                        
     return [all, limit]
 }
-const getProductChartDataById = async (productId) => {
+const getProductChartDataById = async (productId: any) => {
     const getBidIdAndAvgPrice = await dataSource.query(`
         SELECT
             AVG(o.amount) AS amount,
@@ -259,12 +246,10 @@ const getProductChartDataById = async (productId) => {
         LEFT JOIN bids AS b ON o.bid_id = b.id
         LEFT JOIN options AS op ON b.option_id = op.id
         LEFT JOIN products AS p ON op.product_id = p.id
-        WHERE p.id = ?
+        WHERE p.id = ${productId}
         GROUP BY date
         ORDER BY date DESC
-        `, [productId]
-    )
-
+    `)
     let chartData = []
     for (let i=0; i<getBidIdAndAvgPrice.length; i++) {
         chartData.push(
@@ -279,7 +264,7 @@ const getProductChartDataById = async (productId) => {
             data : chartData
         }]
 }
-module.exports = {
+export default {
     getConstantProductDataById,
     getProductTradeDataById,
     getProductChartDataById,

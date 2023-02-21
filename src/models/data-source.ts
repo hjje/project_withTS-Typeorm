@@ -1,5 +1,4 @@
 import { DataSource } from "typeorm";
-import { User } from "../migrations/User";
 // import config from '../config/config';
 require("dotenv").config();
 

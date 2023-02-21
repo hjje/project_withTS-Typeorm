@@ -1,8 +1,13 @@
-// -- migrate:up
-// CREATE TABLE categories(
-//   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-//   name VARCHAR(100)
-// )
+import { Entity, PrimaryGeneratedColumn, Column} from "typeorm"
 
-// -- migrate:down
-// DROP TABLE categories
+@Entity()
+export class Categories {
+
+
+    @PrimaryGeneratedColumn()
+    id!: number
+
+
+    @Column({nullable: true, length : 100})
+    name?: string
+}

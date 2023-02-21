@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const userDao = require('../models/userDao')
 const { catchAsync } = require('../utils/error')
 
-const loginRequired = catchAsync(async (req, res, next) => {
+export const loginRequired = catchAsync(async (req: { headers: { authorization: any }; user: any }, res: any, next: () => void) => {
 
     const accessToken = req.headers.authorization
 

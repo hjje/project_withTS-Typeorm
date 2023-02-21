@@ -1,11 +1,11 @@
-import { appDataSource } from './data-source'
-
-const styleFilterSet = {
-  'trending' : 'order by p.likes DESC',
-  'newest'   : 'order by p.created_at DESC'
-}
-
-const getPostByFilter = async (filterBy) => {
+import {appDataSource} from './data-source';
+const getPostByFilter = async (filterBy: string) => {
+  let orderby = ''
+  if (filterBy = 'trending') {
+    orderby = 'order by p.likes DESC'
+  } else if (filterBy = 'newest') {
+    orderby = 'order by p.created_at DESC'
+  }
   return await appDataSource.query(
       `
       SELECT
@@ -16,11 +16,28 @@ const getPostByFilter = async (filterBy) => {
         p.feed_text,
         p.created_at
       FROM posts p
-      JOIN users u On p.user_id = u.id
-      ${styleFilterSet.filterBy}
+      JOIN users u ON p.user_id = u.id
+      ${orderby}
       `,
     )};
-
-  module.exports = {
-    getPostByFilter
+const getPostDetail = async (postId: string) => {
+  return await appDataSource.query(
+      `
+      SELECT
+        p.profile_image_url,
+        p.post_image_url,
+        u.nickname,
+        p.thumbnail_image_url,
+        p.en_name,
+        p.original_price,
+        p.likes,
+        p.feed_text
+      FROM posts p
+      JOIN users u ON user_id = u.id
+      ${postId}
+      `,
+      )};
+  export default {
+    getPostByFilter,
+    getPostDetail
    };

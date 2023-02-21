@@ -1,8 +1,16 @@
-// -- migrate:up
-// CREATE TABLE brands(
-//   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-//   name VARCHAR(20)
-// )
+import { Entity, PrimaryGeneratedColumn, Column} from "typeorm"
 
-// -- migrate:down
-// DROP TABLE brands
+@Entity()
+export class Brands {
+
+    constructor(name : string) {
+        this.name = name
+    }
+
+    @PrimaryGeneratedColumn()
+    id!: number
+
+
+    @Column({nullable: true, length : 20})
+    name: string
+}

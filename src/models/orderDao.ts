@@ -47,7 +47,7 @@ const addBuyOrder = async (productId: any, size: any, price: any, userId: any) =
         )
             
         await queryRunner.commitTransaction()
-    } catch (err) {
+    } catch (err: any) {
         await queryRunner.rollbackTransaction()
         if (err.message == 'sameUserErr') throw err
         throw new Error('addBuyOrderErr')
@@ -132,7 +132,7 @@ const addSellOrder = async (productId: any, size: any, price: any, userId: any) 
         )
             
         await queryRunner.commitTransaction()
-    } catch (err) {
+    } catch (err : any) {
         await queryRunner.rollbackTransaction()
         if (err.message == 'sameUserErr') throw err
         throw new Error('addSellOrderErr')
@@ -171,7 +171,7 @@ const addSellBid = async (productId: any, size: any, price: any, userId: any) =>
     }
 }
 
-module.exports = {
+export default {
     addBuyOrder,
     addBuyBid,
     addSellOrder,

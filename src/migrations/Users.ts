@@ -3,11 +3,11 @@ import { Entity, PrimaryGeneratedColumn, Column, Binary,CreateDateColumn,UpdateD
 
 // nullable:false  default
 @Entity()
-export class User {
+export class Users {
 
-constructor(n:number , t:string){
-    this.id = n;
-    this.name =t;
+constructor(id:number , name:string){
+    this.id = id
+    this.name = name
 }
 
     @PrimaryGeneratedColumn()

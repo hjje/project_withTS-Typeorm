@@ -1,8 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm"
 
 // nullable:false  default
 // FOREIGN KEY(user_id) REFERENCES users(id),
 // FOREIGN KEY(product_id) REFERENCES products(id)
+
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm"
+
 @Entity()
 export class Products {
 

@@ -1,6 +1,6 @@
-const productDao = require('../models/productDao.ㅅs')
+import productDao from '../models/productDao'
 
-const getProductById = async (productId) => {
+const getProductById = async (productId: any) => {
     try {
         const productData = await productDao.getConstantProductDataById(productId)
         const tradeAll = await productDao.getProductTradeDataById(productId)
@@ -17,11 +17,11 @@ const getProductById = async (productId) => {
     }
 }
 
-const getAllProducts = async (categoryId, size, orderBy) => {
+const getAllProducts = async (categoryId: any, size: any, orderBy: any) => {
     return await productDao.getAllProducts(categoryId, size, orderBy)
 }
 
-module.exports = {
+export default {
     getProductById,
     getAllProducts
 }
