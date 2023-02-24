@@ -5,13 +5,11 @@ import { Request, Response } from "express";
 
 const kakaoLogin = catchAsync(async (req:Request, res:Response) => {
     const authCode : string = req.query.code as string
-
+    console.log(authCode)
     if (!authCode) throw new Error('missingAuthCode');
 
     const accessToken = await _kakaoLogin(authCode);
     res.status(200).json({accessToken})
 })
 
-export default {
-   kakaoLogin
-}
+export default { kakaoLogin }

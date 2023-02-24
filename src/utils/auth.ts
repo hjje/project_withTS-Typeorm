@@ -1,14 +1,14 @@
-const jwt = require('jsonwebtoken')
-const userDao = require('../models/userDao')
-const { catchAsync } = require('../utils/error')
+import jwt from 'jsonwebtoken';
+import userDao from '../models/userDao';
+import { catchAsync } from '../utils/error';
 
-export const loginRequired = catchAsync(async (req: { headers: { authorization: any }; user: any }, res: any, next: () => void) => {
+const loginRequired = catchAsync(async (req: { headers: { authorization: any }; user: any }, res: any, next: () => void) => {
 
     const accessToken = req.headers.authorization
-
+    console.log(req.headers)
     if (!accessToken) throw new Error('accessTokenErr')
     
-    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET)
+    const decoded: any = jwt.verify(accessToken, process.env.JWT_SECRET)
     
     const user = await userDao.getUserByKakaoId(decoded.id)
     
@@ -18,4 +18,4 @@ export const loginRequired = catchAsync(async (req: { headers: { authorization: 
     next();
 })
 
-module.exports = { loginRequired }
+export { loginRequired }

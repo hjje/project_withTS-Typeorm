@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "DOTENV_CONFIG_PATH=.env.test jest --no-cache --watchAll --setupFiles=dotenv/config",
-    "start": "nodemon server.js",
-    "dev": "nodemon --exec node --loader ts-node/esm server.ts",
+    "start": "nodemon --exec ts-node server.ts",
+    "dev": "nodemon --exec node --loader ts-node server.ts",
     "migrate:up": "npx dbmate up",
     "typeorm:create-migration": "typeorm migrations:create --config ./ormconfig.js --name MyMigration",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js"
@@ -44,6 +44,7 @@
     "nodemon": "^2.0.20",
     "supertest": "^6.3.3",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.2",
     "typescript": "^4.9.5"
   }
 }

@@ -1,35 +1,62 @@
-const dataSource = require('./data-source').default
-const whereSet = {
-    DEFAULT : '',
-    TRUE : 'WHERE'
-}
-const andSet = {
-    DEFAULT : '',
-    TRUE : 'AND'
-}
-const joinSet = {
-    DEFAULT : '',
-    OPTIONS : 'LEFT JOIN options AS op ON op.product_id = p.id',
-    BIDS : 'LEFT JOIN bids AS b ON op.id = b.option_id'
-}
-const getAllProducts = async (categoryId: string, size: string, orderBy: string) => {
+import { AppDataSource as dataSource } from './data-source'
+
+interface Set {
+    [key: string]: string;
+  }
+  
+  const whereSet: Set = {
+    DEFAULT: '',
+    TRUE: 'WHERE'
+  }
+  const andSet: Set = {
+    DEFAULT: '',
+    TRUE: 'AND'
+  }
+  const joinSet: Set = {
+    DEFAULT: '',
+    OPTIONS: 'LEFT JOIN options AS op ON op.product_id = p.id',
+    BIDS: 'LEFT JOIN bids AS b ON op.id = b.option_id'
+  }
+  
+  const getAllProducts = async (categoryId: string, size: string, orderBy: string) => {
     try {
-        const categorySet = {
-            DEFAULT : '',
-            [categoryId] : `p.category_id = ${categoryId}`,
-        }
-        const sizeSet = {
-            DEFAULT : '',
-            [size] : `op.size = '${size}'`,
-        }
-        if(!categoryId && !size)
-            {const joinOption = 'DEFAULT'; const where = 'DEFAULT'; categoryId = 'DEFAULT'; const and = 'DEFAULT'; size = 'DEFAULT'; const and2 = 'DEFAULT';}
-        else if(categoryId && !size)
-            {const joinOption = 'DEFAULT'; const where = 'TRUE'; categoryId; const and = 'DEFAULT'; size = 'DEFAULT'; const and2 = 'DEFAULT';}
-        else if(size && !categoryId)
-            {const joinOption = 'OPTIONS'; const where = 'TRUE'; categoryId = 'DEFAULT'; const and = 'DEFAULT'; size; const and2 = 'TRUE';}
-        else if(categoryId && size)
-            {const joinOption = 'OPTIONS'; const where = 'TRUE'; categoryId; const and = 'TRUE'; size; const and2 = 'TRUE';}
+      const categorySet = {
+        DEFAULT: '',
+        [categoryId]: `p.category_id = ${categoryId}`,
+      };
+      const sizeSet = {
+        DEFAULT: '',
+        [size]: `op.size = '${size}'`,
+      };
+  
+      let joinOption = '';
+      let where = '';
+      let and = '';
+      let and2 = '';
+  
+      if (!categoryId && !size) {
+        joinOption = 'DEFAULT';
+        where = 'DEFAULT';
+        categoryId = 'DEFAULT';
+        and = 'DEFAULT';
+        size = 'DEFAULT';
+        and2 = 'DEFAULT';
+      } else if (categoryId && !size) {
+        joinOption = 'DEFAULT';
+        where = 'TRUE';
+        and = 'DEFAULT';
+      } else if (size && !categoryId) {
+        joinOption = 'OPTIONS';
+        where = 'TRUE';
+        categoryId = 'DEFAULT';
+        and2 = 'TRUE';
+      } else if (categoryId && size) {
+        joinOption = 'OPTIONS';
+        where = 'TRUE';
+        and = 'TRUE';
+        and2 = 'TRUE';
+      }
+  
         const getProductId = await dataSource.query(`
             SELECT p.id FROM products AS p
             ${joinSet[joinOption]}

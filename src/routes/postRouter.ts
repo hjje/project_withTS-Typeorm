@@ -1,9 +1,9 @@
-import express ,{ Router } from "express";
-import postController from '../controllers/postController';
+import express ,{ Router } from "express"
+import postController from '../controllers/postController'
 
-const routes : Router = express.Router();
+const routes : Router = express.Router()
 
-routes.get("/", postController.getPostByFilter);
-routes.get("/details/:userId", postController.getPostDetail); 
+routes.get("/", postController.getPostByFilter)
+routes.get("/details/:userId", postController.getPostDetail)
 
-export default { routes };
+export { routes }

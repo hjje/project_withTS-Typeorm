@@ -1,20 +1,10 @@
 require("dotenv").config();
 
 import { createApp } from "./app";
-import { DataSource } from "typeorm"
+import { AppDataSource } from "./src/models/data-source";
 
   const app = createApp()
   const PORT = process.env.PORT
-const AppDataSource = new DataSource(
-  {
-  
-    type: "mysql",
-    host: "127.0.0.1",
-    port: 3306,
-    username: "root",
-    password: "Qwer!234",
-    database: "icecreamDB",
-})
 
 AppDataSource.initialize()
     .then(() => {

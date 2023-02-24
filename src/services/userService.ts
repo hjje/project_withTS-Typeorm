@@ -4,10 +4,11 @@ import axios from 'axios';
 
 
 const kakaoLogin = async (authCode:string) => {
-    const getKakaoToken = await axios.get('https://kauth.kakao.com/oauth/token', {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
+    
+    const getKakaoToken = await axios(
+        {
+        method : 'post',
+        url : 'http://127.0.0.1:3000/oauth/callback/kakao',
         params: {
             grant_type: 'authorization_code',
             client_id: process.env.REST_API_KEY,
@@ -17,10 +18,17 @@ const kakaoLogin = async (authCode:string) => {
         withCredentials: true
     })
 
-    const getKakaoUserData = await axios.get('https://kapi.kakao.com/v2/user/me', {
-        headers: {
-            'Authorization': `Bearer ${getKakaoToken.data.access_token}`
-        }
+    const getKakaoUserData = await axios(
+        {
+        method : 'get',
+        url : 'https://kapi.kakao.com/v2/user/me',
+        params: {
+            grant_type: 'authorization_code',
+            client_id: process.env.REST_API_KEY,
+            redirect_url: process.env.REDIRECT_URI,
+            code: authCode
+        },
+        withCredentials: true
     })
 
     const kakaoId = getKakaoUserData.data.id

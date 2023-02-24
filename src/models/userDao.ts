@@ -1,4 +1,4 @@
-import { appDataSource as dataSource } from './data-source'
+import { AppDataSource as dataSource } from './data-source'
 
 
 const getUserByKakaoId = async (id: string) => {

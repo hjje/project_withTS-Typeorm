@@ -1,12 +1,13 @@
-import {appDataSource} from './data-source';
+import {AppDataSource} from './data-source';
 const getPostByFilter = async (filterBy: string) => {
+  
   let orderby = ''
   if (filterBy = 'trending') {
     orderby = 'order by p.likes DESC'
   } else if (filterBy = 'newest') {
     orderby = 'order by p.created_at DESC'
   }
-  return await appDataSource.query(
+  return await AppDataSource.query(
       `
       SELECT
         p.post_image_url,
@@ -21,7 +22,7 @@ const getPostByFilter = async (filterBy: string) => {
       `,
     )};
 const getPostDetail = async (postId: string) => {
-  return await appDataSource.query(
+  return await AppDataSource.query(
       `
       SELECT
         p.profile_image_url,
