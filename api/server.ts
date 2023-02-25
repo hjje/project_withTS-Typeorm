@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
+dotenv.config();
+
 import { createApp } from '../api/app';
 import appDataSource from './dataSource';
-
-dotenv.config();
 
 const setServer = async(): Promise<void> => {
     const app = createApp();

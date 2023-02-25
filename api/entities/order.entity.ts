@@ -1,25 +1,25 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('orders')
 export class Order {
     @PrimaryGeneratedColumn()
-    id!: number
+    id: number
+
+    @Column('int')
+    status_id: number
+
+    @Column('int')
+    buyer_id: number
+
+    @Column('int')
+    seller_id: number
+
+    @Column('int')
+    bid_id: number
+
+    @Column('decimal', {precision: 10, scale: 2, nullable: true})
+    amount: number
 
     @Column()
-    status_id!: number
-
-    @Column()
-    buyer_id!: number
-
-    @Column()
-    seller_id!: number
-
-    @Column()
-    bid_id!: number
-
-    @Column()
-    amount!: number
-
-    @Column()
-    created_at!: Date
+    created_at: Date
 }

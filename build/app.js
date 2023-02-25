@@ -8,8 +8,8 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
-const routes_1 = require("../build/routes");
-const error_1 = require("../build/utils/error");
+const routes_1 = require("../api/routes");
+// dotenv -> 지금 내가 어떤 환경에 있는지
 dotenv_1.default.config();
 const createApp = () => {
     const app = (0, express_1.default)();
@@ -17,7 +17,7 @@ const createApp = () => {
     app.use((0, morgan_1.default)('tiny'));
     app.use(express_1.default.json());
     app.use(routes_1.routes);
-    app.use(error_1.globalErrorHandler);
+    //app.use(globalErrorHandler)
     app.get('/ping', (req, res) => {
         res.status(200).json({ message: 'pong' });
     });

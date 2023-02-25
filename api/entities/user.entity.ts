@@ -1,37 +1,41 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from "typeorm"
+import { Post } from "./post.entity"
 
-@Entity()
+@Entity("users")
 export class User {
     @PrimaryGeneratedColumn()
-    id!: number
+    id: number
 
-    @Column()
-    nickname!: string
+    @Column("varchar", {length: 100})
+    nickname: string
 
-    @Column()
-    email!: string
+    @Column("varchar", {length: 100, nullable: true})
+    email: string
 
-    @Column()
-    password!: number
+    @Column("int")
+    password: number
 
-    @Column()
-    profile_image_url!: string
+    @Column("varchar", {length: 1000, nullable: true})
+    profile_image_url: string
     
-    @Column()
-    address!: string
+    @Column("varchar", {length: 500, nullable: true})
+    address: string
 
-    @Column()
-    point!: number
+    @Column("decimal", {precision: 10, scale: 2, nullable: true})
+    point: number
 
-    @Column()
-    social_id!: number
+    @Column("bigint")
+    social_id: string
 
-    @Column()
-    social_type_id!: number
+    @Column("int")
+    social_type_id: number
 
-    @Column()
-    created_at!: Date
+    @CreateDateColumn()
+    created_at: Date
 
-    @Column()
-    updated_at!: Date
+    @UpdateDateColumn()
+    updated_at: Date
+
+    @OneToMany(() => Post, (posts) => posts.user_id)
+    posts: Post[]
 }

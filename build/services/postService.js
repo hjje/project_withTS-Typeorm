@@ -12,10 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const post_repository_1 = require("../repositories/post.repository");
-const dataSource_1 = __importDefault(require("../dataSource"));
+const post_repository_1 = __importDefault(require("../repositories/post.repository"));
 const getPostByFilter = (filterBy) => __awaiter(void 0, void 0, void 0, function* () {
-    const postRepository = dataSource_1.default.getCustomRepository(post_repository_1.PostRepository);
-    return postRepository.getPostByFilter(filterBy);
+    return post_repository_1.default.getPostByFilter(filterBy);
 });
 exports.default = { getPostByFilter };

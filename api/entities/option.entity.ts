@@ -1,13 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('options')
 export class Option {
     @PrimaryGeneratedColumn()
-    id!: number
+    id: number
 
-    @Column()
-    size!: string
+    @Column('varchar', {length: 50, nullable: true})
+    size: string
 
-    @Column()
-    product_id!: number
+    @Column('int')
+    product_id: number
 }

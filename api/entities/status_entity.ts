@@ -1,10 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('statuses')
 export class Status {
     @PrimaryGeneratedColumn()
-    id!: number
+    id: number
 
-    @Column()
-    name!: string
+    @Column('varchar', {length: 200, nullable: true})
+    name: string
 }

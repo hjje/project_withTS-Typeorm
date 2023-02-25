@@ -2,12 +2,13 @@
     "compilerOptions": {
         "lib": ["es6"],
         "target": "es6",
-        "module": "commonjs",
+        "module": "CommonJS",
         "moduleResolution": "node",
         "esModuleInterop": true,
         "outDir": "build",
         "emitDecoratorMetadata": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
     },
-    "include": ["api"]
+    "include": ["api"],
+    "exclude": ["node_modules"]
 }

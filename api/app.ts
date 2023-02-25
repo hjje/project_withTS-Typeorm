@@ -17,7 +17,7 @@ const createApp = (): Application => {
     app.use(morgan('tiny'));
     app.use(express.json());
     app.use(routes);
-    app.use(globalErrorHandler)
+    //app.use(globalErrorHandler)
     
     app.get('/ping', (req: Request, res: Response) => {
         res.status(200).json({ message: 'pong'});

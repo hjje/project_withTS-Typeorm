@@ -1,5 +1,5 @@
-import { EntityRepository, Repository }from 'typeorm';
 import { Product }from '../entities/product.entity';
+import appDataSource from '../dataSource';
 
 const whereSet = {
     DEFAULT : '',
@@ -15,20 +15,292 @@ const joinSet = {
     BIDS : 'LEFT JOIN bids AS b ON op.id = b.option_id'
 }
 
-@EntityRepository(Product)
-export class ProductRepository extends Repository<Product> {
-    public async getAllProducts(categoryId, size, orderBy): Promise<Product> {
-        try{
-        if(!categoryId && !size) 
-            {joinOption = 'DEFAULT'; where = 'DEFAULT'; categoryId = 'DEFAULT'; and = 'DEFAULT'; size = 'DEFAULT'; and2 = 'DEFAULT';}
-        else if(categoryId && !size)
-            {joinOption = 'DEFAULT'; where = 'TRUE'; categoryId; and = 'DEFAULT'; size = 'DEFAULT'; and2 = 'DEFAULT';}
-        else if(size && !categoryId) 
-            {joinOption = 'OPTIONS'; where = 'TRUE'; categoryId = 'DEFAULT'; and = 'DEFAULT'; size; and2 = 'TRUE';}
-        else if(categoryId && size) 
-            {joinOption = 'OPTIONS'; where = 'TRUE'; categoryId; and = 'TRUE'; size; and2 = 'TRUE';}
-        }
-    } catch {
-        
+const productRepository = appDataSource.getRepository(Product)
+
+const getAllProducts = async(categoryId, size, orderBy) => {
+    try{
+    const categorySet = {
+        DEFAULT : '',
+        [categoryId] : `p.category_id = ${categoryId}`,
     }
+    const sizeSet = {
+        DEFAULT : '',
+        [size] : `op.size = '${size}'`,
+    }
+
+    let joinOption = ''
+    let where = ''
+    let and = ''
+    let and2 = ''
+
+    if(!categoryId && !size) 
+        {joinOption = 'DEFAULT'; where = 'DEFAULT'; categoryId = 'DEFAULT'; and = 'DEFAULT'; size = 'DEFAULT'; and2 = 'DEFAULT';}
+    else if(categoryId && !size)
+        {joinOption = 'DEFAULT'; where = 'TRUE'; categoryId; and = 'DEFAULT'; size = 'DEFAULT'; and2 = 'DEFAULT';}
+    else if(size && !categoryId) 
+        {joinOption = 'OPTIONS'; where = 'TRUE'; categoryId = 'DEFAULT'; and = 'DEFAULT'; size; and2 = 'TRUE';}
+    else if(categoryId && size) 
+        {joinOption = 'OPTIONS'; where = 'TRUE'; categoryId; and = 'TRUE'; size; and2 = 'TRUE';}
+
+    const getProductId = await productRepository.query(`
+        SELECT p.id FROM products AS p
+        ${joinSet[joinOption]}
+        ${whereSet[where]}
+        ${categorySet[categoryId]}
+        ${andSet[and]}
+        ${sizeSet[size]}
+    `)
+
+    let returnData = [];
+
+    for (let i=0; i<getProductId.length; i++) {
+        const [getPrices] = await appDataSource.query(`
+            SELECT b.price FROM bids AS b
+            LEFT JOIN options AS op ON b.option_id = op.id
+            LEFT JOIN products AS p ON op.product_id = p.id
+            LEFT JOIN orders AS o ON b.id = o.bid_id
+            WHERE p.id = ?
+            AND b.type_id = 2
+            AND b.id NOT IN (SELECT bid_id FROM orders)
+            ${andSet[and2]}
+            ${sizeSet[size]}              
+            ORDER BY b.price ASC;
+        `, [getProductId[i].id]
+        )
+        if (!getPrices) {
+            returnData.push({id : getProductId[i].id, price : ''})
+        } else {
+            returnData.push({id : getProductId[i].id, price : getPrices.price})
+        }
+    }
+
+    for (let i=0; i<getProductId.length; i++) {
+        const getOtherProductsData = await appDataSource.query(`
+            SELECT
+                p.thumbnail_image_url AS thumbnailImageUrl,
+                b.name AS brandName,
+                p.en_name AS enName,
+                p.kr_name AS krName,
+                p.release_date AS releaseDate
+            FROM products AS p
+            LEFT JOIN brands AS b ON b.id = p.brand_id
+            WHERE p.id = ?
+        `, [getProductId[i].id]
+        )
+        returnData[i].thumbnailImageUrl = getOtherProductsData[0].thumbnailImageUrl
+        returnData[i].brandName = getOtherProductsData[0].brandName
+        returnData[i].enName = getOtherProductsData[0].enName
+        returnData[i].krName = getOtherProductsData[0].krName
+        returnData[i].releaseDate = getOtherProductsData[0].releaseDate
+    }
+
+    if (!orderBy) {
+        returnData = returnData
+    } else if (orderBy == 'priceHighToLow') {
+        let arr = [];
+        for (let i=0; i<returnData.length; i++) {
+            if (returnData[i].price !== '') {
+                arr.push(returnData[i])
+            }
+        }
+        arr.sort((a, b) => b.price - a.price)
+        returnData = arr;
+    } else if (orderBy == 'releaseDate') {
+        returnData = returnData.sort((a, b) => b.releaseDate - a.releaseDate)
+    }
+    return returnData   
+    } catch {
+        throw new Error('getAllProductsErr')
+    }
+}
+
+const getConstantProductDataById = async(productId) => {
+
+let [getBuyNowPrice] =  await appDataSource.query(`
+        SELECT
+            b.price
+        FROM
+            bids AS b
+        LEFT JOIN options AS op ON b.option_id = op.id
+        LEFT JOIN products AS p ON op.product_id = p.id
+        LEFT JOIN orders AS o ON o.bid_id = b.id
+        WHERE
+            p.id = ?
+        AND 
+            b.id NOT IN (SELECT bid_id FROM orders)
+        AND
+            b.type_id = 2
+        ORDER BY b.price ASC
+        `, [productId]
+    )
+    if (!getBuyNowPrice) getBuyNowPrice = {price : ''}
+
+    let [getSellNowPrice] =  await appDataSource.query(`
+        SELECT
+            b.price
+        FROM
+            bids AS b
+        LEFT JOIN options AS op ON b.option_id = op.id
+        LEFT JOIN products AS p ON op.product_id = p.id
+        LEFT JOIN orders AS o ON o.bid_id = b.id
+        WHERE
+            p.id = ?
+        AND 
+            b.id NOT IN (SELECT bid_id FROM orders)
+        AND
+            b.type_id = 1
+        ORDER BY b.price DESC
+        `, [productId]
+    )
+    if (!getSellNowPrice) getSellNowPrice = {price : ''}
+
+    let [getImages] = await appDataSource.query(`
+        SELECT
+            JSON_ARRAYAGG(i.image_url) AS imageUrl
+        FROM
+            product_images AS i
+        LEFT JOIN
+            products AS p ON i.product_id = p.id
+        WHERE
+            p.id = ?
+        `, [productId]
+    )
+
+    let imgArr = [];
+    
+    for (let i=0; i<getImages.imageUrl.length; i++) {
+        imgArr.push({
+            alt : 'alt',
+            url : getImages.imageUrl[i]
+        })
+    }
+
+    const [productData] = await appDataSource.query(`
+        SELECT
+            p.id,
+            b.name AS brandName,
+            p.en_name AS enName,
+            p.kr_name AS krName,
+            p.thumbnail_image_url AS thumbnailImageUrl,
+            p.recent_trade_price AS recentTradePrice,
+            p.model_number AS modelNumber,
+            p.category_id AS categoryId,
+            DATE_FORMAT(p.release_date, '%y/%m/%d') AS releaseDate,
+            p.color,
+            p.original_price AS originalPrice
+        FROM
+            products AS p
+        LEFT JOIN
+            brands AS b ON p.brand_id = b.id
+        WHERE
+            p.id = ?
+        `, [productId]
+    )
+
+    productData.buyNow = getBuyNowPrice.price
+    productData.sellNow = getSellNowPrice.price
+    productData.images = imgArr
+
+    return productData
+}
+
+const getProductTradeDateById = async(productId) => {
+
+    await appDataSource.query(`
+    SET @rownum:=0
+`)
+    const tradeDataAll = await appDataSource.query(`
+    SELECT
+        (@rownum:=@rownum + 1) AS id,
+        op.size,
+        DATE_FORMAT(o.created_at, '%Y/%m/%d') AS date,
+        o.amount AS price
+    FROM orders AS o
+    LEFT JOIN bids AS b ON o.bid_id = b.id
+    LEFT JOIN options AS op ON b.option_id = op.id
+    LEFT JOIN products AS p ON op.product_id = p.id
+    WHERE p.id = ?
+    AND o.status_id = 1
+    ORDER BY date DESC
+    `, [productId]
+    )
+    const buyBidDataAll = await appDataSource.query(`
+    SELECT
+        (@rownum:=@rownum + 1) AS id,
+        op.size,
+        DATE_FORMAT(b.created_at, '%Y/%m/%d') AS date,
+        b.price AS price
+    FROM bids AS b
+    LEFT JOIN options AS op ON op.id = b.option_id
+    LEFT JOIN products AS p ON op.product_id = p.id
+    WHERE p.id = ?
+    AND b.type_id = 1
+    ORDER BY b.price DESC
+    `, [productId]
+    )
+    const sellBidDataAll = await appDataSource.query(`
+    SELECT
+        (@rownum:=@rownum + 1) AS id,
+        op.size,
+        DATE_FORMAT(b.created_at, '%Y/%m/%d') AS date,
+        b.price AS price
+    FROM bids AS b
+    LEFT JOIN options AS op ON op.id = b.option_id
+    LEFT JOIN products AS p ON op.product_id = p.id
+    WHERE p.id = ?
+    AND b.type_id = 2
+    ORDER BY price ASC
+    `, [productId]
+)
+    const tradeDataLimit = tradeDataAll.slice(0,5)
+    const buyBidDataLimit = buyBidDataAll.slice(0,5)
+    const sellBidDataLimit = sellBidDataAll.slice(0,5)
+    const all = [{
+        tradeDataAll,
+        buyBidDataAll,
+        sellBidDataAll}]
+    const limit = [{
+        tradeDataLimit,
+        buyBidDataLimit,
+        sellBidDataLimit}]
+                    
+return [all, limit]
+}
+
+const getProductChartDataById = async(productId) => {
+
+    const getBidIdAndAvgPrice = await appDataSource.query(`
+        SELECT
+            AVG(o.amount) AS amount,
+            DATE_FORMAT(o.created_at, '%Y/%m/%d') AS date
+        FROM orders AS o
+        LEFT JOIN bids AS b ON o.bid_id = b.id
+        LEFT JOIN options AS op ON b.option_id = op.id
+        LEFT JOIN products AS p ON op.product_id = p.id
+        WHERE p.id = ?
+        GROUP BY date
+        ORDER BY date DESC
+        `, [productId]
+    )
+
+    let chartData = []
+    for (let i=0; i<getBidIdAndAvgPrice.length; i++) {
+        chartData.push(
+            {
+                y : getBidIdAndAvgPrice[i].amount,
+                x : getBidIdAndAvgPrice[i].date
+            }
+        )
+    }
+    return [{
+            id : productId,
+            data : chartData
+        }]
+}
+
+export {
+    getAllProducts,
+    getConstantProductDataById,
+    getProductTradeDateById,
+    getProductChartDataById
 }

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import productService from '../services/productService'
+import * as productService from '../services/productService'
 import { catchAsync } from '../utils/error'
 
 interface Data {
@@ -28,7 +28,7 @@ const getProductById = catchAsync(async(req:Request, res:Response): Promise<void
     res.status(200).json({ data: result })
 })
 
-export default {
+export {
     getAllProducts,
     getProductById
 }

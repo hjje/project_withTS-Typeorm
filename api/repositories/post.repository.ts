@@ -1,29 +1,31 @@
-import { EntityRepository, Repository }  from 'typeorm';
 import { Post } from '../entities/post.entity';
+import { User } from '../entities/user.entity';
+import appDataSource from '../dataSource';
 
-enum StyleFilterSet {
-    trending = 'order by p.likes DESC',
-    newest   = 'order by p.created_at DESC'
+const styleFilterSet = {
+    'trending' : 'p.likes',
+    'newest'   : 'p.created_at'
   }
 
-@EntityRepository(Post)
-export class PostRepository extends Repository<Post> {
-    public async getPostByFilter(filterBy: keyof StyleFilterSet): Promise<Post> {
+const postRepository = appDataSource.getRepository(Post)
 
-        const options: Object = {
-            relations: ["user"],
-            select: [
-                "post_image_url",
-                "profile_image_url",
-                "nickname",
-                "likes",
-                "feed_text",
-                "created_at"
-            ],
-            order: {
-                [StyleFilterSet[filterBy]]: 'DESC'
-            }
-        }
-        return await this.findOneBy(options)
-    }
+const getPostByFilter = async(filterBy): Promise<Object> => {
+ 
+  const post = await postRepository.createQueryBuilder('p')
+    .select([
+      'p.post_image_url',
+      'u.profile_image_url',
+      'u.nickname',
+      'p.likes',
+      'p.feed_text',
+      'p.created_at'
+    ])
+    .leftJoin(User, 'u', 'p.user_id = u.id')
+    .orderBy(styleFilterSet[filterBy], 'DESC')
+    .getMany()
+  return post;
+}
+
+export {
+    getPostByFilter
 }

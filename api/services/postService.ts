@@ -1,10 +1,7 @@
-import { PostRepository } from "../repositories/post.repository";
-import appDataSource from "../dataSource";
+import * as postRepository from '../repositories/post.repository'
 
-const getPostByFilter = async(filterBy) => {
-
-    const postRepository = appDataSource.getCustomRepository(PostRepository);
+const getPostByFilter = async(filterBy): Promise<Object> => {
     return postRepository.getPostByFilter(filterBy);
 }
 
-export default { getPostByFilter };
+export { getPostByFilter };

@@ -1,10 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('types')
 export class Type {
     @PrimaryGeneratedColumn()
-    id!: number
+    id: number
 
-    @Column()
-    name!: string
+    @Column('varchar', {length: 50, nullable: true})
+    name: string
 }

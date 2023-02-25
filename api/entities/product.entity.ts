@@ -1,31 +1,40 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm"
 
-@Entity()
+@Entity('products')
 export class Product {
     @PrimaryGeneratedColumn()
-    id!: number
+    id: number
 
-    @Column()
-    brand_id!: number
+    @Column('int')
+    brand_id: number
 
-    @Column()
-    en_name!: string
+    @Column('varchar', {length: 100, nullable: true})
+    en_name: string
 
-    @Column()
-    kr_name!: string
+    @Column('varchar', {length: 100, nullable: true})
+    kr_name: string
 
-    @Column()
-    thumbnail_image!: string
+    @Column('varchar', {length: 1000, nullable: true})
+    thumbnail_image: string
 
-    @Column()
-    recent_trade_price!: number
+    @Column('decimal', {precision: 10, scale: 2, nullable: true})
+    recent_trade_price: number
 
-    @Column()
-    model_number!: string
+    @Column('varchar', {length: 100, nullable: true})
+    model_number: string
 
-    @Column()
-    release_date!: Date
+    @Column('timestamp')
+    release_date: Date
 
-    @Column()
-    color!: string
+    @Column('varchar', {length: 100, nullable: true})
+    color: string
+
+    @Column('int')
+    category_id: number
+
+    @Column('decimal', {precision: 10, scale: 2, nullable: true})
+    original_price: number
+
+    @CreateDateColumn()
+    created_at: Date
 }

@@ -1,10 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('categories')
 export class Category {
     @PrimaryGeneratedColumn()
-    id!: number
+    id: number
 
-    @Column()
-    name!: string
+    @Column('varchar', {length: 100, nullable: true})
+    name: string
 }

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import userService from '../services/userService'
+import * as userService from '../services/userService'
 import { catchAsync } from '../utils/error';
 
 const kakaoLogin = catchAsync(async(req: Request, res: Response): Promise<void> => {
@@ -7,8 +7,18 @@ const kakaoLogin = catchAsync(async(req: Request, res: Response): Promise<void> 
 
     if(!authCode) throw new Error('missing Authcode');
 
-    const accessToken: Object = await userService.kakaoLogin(authCode);
+    const accessToken = await userService.kakaoLogin(authCode)
     res.status(200).json({accessToken})
 })
 
-export default { kakaoLogin }
+const getUserInfo = async(req: Request, res: Response) => {
+    const userId = req.params.id
+
+    const userData = await userService.getUserInfo(userId)
+    res.status(200).json({data: userData})
+}
+
+export { 
+    kakaoLogin,
+    getUserInfo
+ }

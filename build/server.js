@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
-const app_1 = require("../build/app");
-const dataSource_1 = __importDefault(require("./dataSource"));
 dotenv_1.default.config();
+const app_1 = require("../api/app");
+const dataSource_1 = __importDefault(require("./dataSource"));
 const setServer = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, app_1.createApp)();
     const PORT = process.env.PORT;

@@ -1,13 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('product_images')
 export class Product_Image {
     @PrimaryGeneratedColumn()
-    id!: number
+    id: number
 
-    @Column()
-    imgae_url!: string
+    @Column('varchar', {length: 1000, nullable: true})
+    imgae_url: string
 
-    @Column()
-    product_id!: number
+    @Column('int')
+    product_id: number
 }

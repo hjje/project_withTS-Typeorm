@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,38 +35,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const user_repository_1 = require("../repositories/user.repository");
+exports.kakaoLogin = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const axios_1 = __importDefault(require("axios"));
-const dataSource_1 = __importDefault(require("../dataSource"));
+const kakaoService = __importStar(require("./kakaoService"));
+const userRepository = __importStar(require("../repositories/user.repository"));
 const kakaoLogin = (authCode) => __awaiter(void 0, void 0, void 0, function* () {
-    const getKakaoToken = yield axios_1.default.get('https://kauth.kakao.com/oauth/token', {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        params: {
-            grant_type: 'authorization_code',
-            client_id: process.env.REST_API_KEY,
-            redirect_url: process.env.REDIRECT_URI,
-            code: authCode
-        },
-        withCredentials: true
-    });
-
-    console.log(getKakaoToken)
-    
-    const getKakaoUserData = yield axios_1.default.get('https://kapi.kakao.com/v2/user/me', {
-        headers: {
-            'Authorization': `Bearer ${getKakaoToken.data.access_token}`
-        }
-    });
-    
-    console.log(getKakaoUserData)
-
-    const kakaoId = getKakaoUserData.data.id;
-    const email = getKakaoUserData.data.kakao_account.email;
-    const { profile_image: profile_image, nickname } = getKakaoUserData.data.properties;
-    const userRepository = dataSource_1.default.getCustomRepository(user_repository_1.UserRepository);
+    const kakaoAccessToken = yield kakaoService.getKakaoAccessToken(authCode);
+    console.log(kakaoAccessToken);
+    const kakaoUserInfo = yield kakaoService.getUserInfoByKakao(kakaoAccessToken);
+    console.log(kakaoUserInfo);
+    const kakaoId = kakaoUserInfo.id;
+    const email = kakaoUserInfo.kakao_account.email;
+    const { profile_image: profile_image, nickname } = kakaoUserInfo.properties;
     const isExist = yield userRepository.checkRegisteredAlready(kakaoId);
     let accessToken = '';
     if (!isExist) {
@@ -61,4 +64,4 @@ const kakaoLogin = (authCode) => __awaiter(void 0, void 0, void 0, function* () 
     }
     return accessToken;
 });
-exports.default = { kakaoLogin };
+exports.kakaoLogin = kakaoLogin;

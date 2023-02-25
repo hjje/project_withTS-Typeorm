@@ -1,49 +1,58 @@
-import { EntityRepository, Repository } from "typeorm";
 import { User } from "../entities/user.entity";
+import appDataSource from "../dataSource";
 
-@EntityRepository(User)
-export class UserRepository extends Repository<User> {
+const userRepository = appDataSource.getRepository(User)
 
-    public async getUserByKakaoId(id: number): Promise<User> {
-        const result = await this.findOne(
+// test code for finding user info
+const getUserInfo = async(userId) => {
+	const userInfo = await appDataSource.getRepository(User)
+    const result = userInfo.findOneBy({
+        id: userId
+    })
+    console.log(result)
+    return result
+}
+
+const getUserByKakaoId = async(id: string): Promise<User> => {
+    const user = await userRepository.findOneBy(
+        
+        {
+            social_id: id,
+        }
+    )
+    return user
+}
+
+const checkRegisteredAlready = async(kakaoId: string): Promise<any> => {
+        const user = await userRepository.findOneBy(
             {
-                where: {
-                    social_id: id
-                }
+                social_id: kakaoId
             }
         )
-        return result[0]
-    }
+        console.log(user)
+        return user
+}
 
-    public async checkRegisteredAlready(kakaoId: number): Promise<User> {
-        try{
-            const user = await this.findOne(
-                { 
-                    where : {
-                        social_id: kakaoId
-                    }
-                }
-            )
-            return user
-        } catch {
-            throw new Error('checkRegisteredAlreadyErr')
-        }
+const createUser = async(kakaoId: string, email: string, profile_image: string, nickname: string): Promise<void> => {
+    try{
+        const user = userRepository.create(
+            
+            {
+                social_id: kakaoId,
+                email,
+                profile_image_url: profile_image,
+                nickname
+            }
+        )
+        await userRepository.save(user)
+    } catch {
+        throw new Error('createUserErr')
     }
+}
 
-    public async createUser(kakaoId: number, email: string, profile_image: string, nickname: string): Promise<void> {
-        try{
-            await this.findOne(
-                {
-                    where: {
-                        social_id: kakaoId,
-                        email,
-                        profile_image_url: profile_image,
-                        nickname
-                    }
-                }
-            )
-        } catch {
-            throw new Error('createUserErr')
-        }
-    }
+export {
+    getUserInfo,
+    getUserByKakaoId,
+    checkRegisteredAlready,
+    createUser
 }

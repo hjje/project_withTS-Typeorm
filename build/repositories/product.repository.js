@@ -9,6 +9,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductRepository = void 0;
 const typeorm_1 = require("typeorm");
 const product_entity_1 = require("../entities/product.entity");
+const whereSet = {
+    DEFAULT: '',
+    TRUE: 'WHERE'
+};
+const andSet = {
+    DEFAULT: '',
+    TRUE: 'AND'
+};
+const joinSet = {
+    DEFAULT: '',
+    OPTIONS: 'LEFT JOIN options AS op ON op.product_id = p.id',
+    BIDS: 'LEFT JOIN bids AS b ON op.id = b.option_id'
+};
 let ProductRepository = class ProductRepository extends typeorm_1.Repository {
 };
 ProductRepository = __decorate([
