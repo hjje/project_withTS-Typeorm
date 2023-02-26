@@ -10,7 +10,7 @@ const getPostByFilter = async (filterBy) => {
       `
       SELECT
         p.post_image_url,
-        u.profile_image_url,
+        u.profile_image_uxqrl,
         u.nickname,
         p.likes,
         p.feed_text,
