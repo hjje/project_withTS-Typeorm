@@ -1,5 +1,5 @@
-import { Post } from '../entities/post.entity';
-import { User } from '../entities/user.entity';
+import { posts } from '../entities/post.entity';
+import { users } from '../entities/user.entity';
 import appDataSource from '../dataSource';
 
 const styleFilterSet = {
@@ -7,7 +7,7 @@ const styleFilterSet = {
     'newest'   : 'p.created_at'
   }
 
-const postRepository = appDataSource.getRepository(Post)
+const postRepository = appDataSource.getRepository(posts)
 
 const getPostByFilter = async(filterBy): Promise<Object> => {
  
@@ -20,7 +20,7 @@ const getPostByFilter = async(filterBy): Promise<Object> => {
       'p.feed_text',
       'p.created_at'
     ])
-    .leftJoin(User, 'u', 'p.user_id = u.id')
+    .leftJoin(users, 'u', 'p.user_id = u.id')
     .orderBy(styleFilterSet[filterBy], 'DESC')
     .getMany()
   return post;

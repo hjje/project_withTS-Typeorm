@@ -1,10 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
-@Entity('statuses')
-export class Status {
-    @PrimaryGeneratedColumn()
-    id: number
+@Entity()
+export class statuses {
 
-    @Column('varchar', {length: 200, nullable: true})
-    name: string
+    @PrimaryGeneratedColumn({ type:'int' })
+    id! : number
+
+    @Column({ length : 100, nullable: true})
+    name : string
+
 }

@@ -1,13 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm"
+import { products } from "./product.entity"
 
-@Entity('product_images')
-export class Product_Image {
-    @PrimaryGeneratedColumn()
-    id: number
+@Entity()
+export class product_images {
 
-    @Column('varchar', {length: 1000, nullable: true})
-    imgae_url: string
+    @PrimaryGeneratedColumn({ type:'int' })
+    id!: number
 
-    @Column('int')
-    product_id: number
+    @Column({ length : 1000, nullable: true })
+    image_url: string
+
+    @ManyToOne(()=>products, (product)=>product, {nullable: false})
+    @JoinColumn({name : 'product_id'})
+    product_img : product_images
 }

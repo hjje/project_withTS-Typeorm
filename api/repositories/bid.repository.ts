@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { Bid } from '../entities/bid.entity';
+import { bids } from '../entities/bid.entity';
 
-@EntityRepository(Bid)
-export class BidRepository extends Repository<Bid> {}
+@EntityRepository(bids)
+export class BidRepository extends Repository<bids> {}

@@ -1,13 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn} from "typeorm"
+import { products } from "./product.entity"
 
-@Entity('options')
-export class Option {
-    @PrimaryGeneratedColumn()
-    id: number
+@Entity()
+export class options {
 
-    @Column('varchar', {length: 50, nullable: true})
+    @PrimaryGeneratedColumn( {type:'int'} )
+    id!: number
+
+    @Column({ nullable: true, length : 50})
     size: string
 
-    @Column('int')
-    product_id: number
+    @ManyToOne(()=>products,(product)=>product, {nullable: false} )
+    @JoinColumn({name: 'product_id'})
+    product: products
+
 }

@@ -1,4 +1,4 @@
-import { Product }from '../entities/product.entity';
+import { products }from '../entities/product.entity';
 import appDataSource from '../dataSource';
 
 const whereSet = {
@@ -15,7 +15,7 @@ const joinSet = {
     BIDS : 'LEFT JOIN bids AS b ON op.id = b.option_id'
 }
 
-const productRepository = appDataSource.getRepository(Product)
+const productRepository = appDataSource.getRepository(products)
 
 const getAllProducts = async(categoryId, size, orderBy) => {
     try{

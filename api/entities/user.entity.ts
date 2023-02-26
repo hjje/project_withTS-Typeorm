@@ -1,41 +1,39 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from "typeorm"
-import { Post } from "./post.entity"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,UpdateDateColumn } from "typeorm"
 
-@Entity("users")
-export class User {
-    @PrimaryGeneratedColumn()
-    id: number
+@Entity()
+export class users {
 
-    @Column("varchar", {length: 100})
-    nickname: string
+    @PrimaryGeneratedColumn({ type:'int' })
+    id! : number
 
-    @Column("varchar", {length: 100, nullable: true})
-    email: string
+    @Column({ length : 100, nullable: true})
+    name : string
 
-    @Column("int")
-    password: number
+    @Column({ length : 100, nullable: true})
+    email : string
 
-    @Column("varchar", {length: 1000, nullable: true})
-    profile_image_url: string
+    @Column({ type:'binary', nullable: true })
+    password : number
     
-    @Column("varchar", {length: 500, nullable: true})
-    address: string
+    @Column({ length : 1000, nullable: true})
+    profile_image_url : string
 
-    @Column("decimal", {precision: 10, scale: 2, nullable: true})
-    point: number
+    @Column({length : 1000, nullable: true})
+    address : string
 
-    @Column("bigint")
-    social_id: string
+    @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+    point : number
 
-    @Column("int")
-    social_type_id: number
+    @Column({ type:'bigint', nullable: true })
+    social_id : number
 
-    @CreateDateColumn()
-    created_at: Date
+    @Column({ type:'int', nullable: true })
+    social_type_id : number
 
-    @UpdateDateColumn()
-    updated_at: Date
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+    public created_at: Date
 
-    @OneToMany(() => Post, (posts) => posts.user_id)
-    posts: Post[]
+    @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)", nullable: true })
+    public updated_at: Date
+
 }

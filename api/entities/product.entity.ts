@@ -1,40 +1,47 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from "typeorm"
+import { brands } from "./brand.entity" 
+import { categories } from "./category.entity"
 
-@Entity('products')
-export class Product {
-    @PrimaryGeneratedColumn()
-    id: number
+@Entity()
+export class products {
 
-    @Column('int')
-    brand_id: number
+    @PrimaryGeneratedColumn({ type:'int' })
+    id!: number
 
-    @Column('varchar', {length: 100, nullable: true})
+    @Column({ length : 100, nullable: true})
     en_name: string
 
-    @Column('varchar', {length: 100, nullable: true})
+    @Column({ length : 100, nullable: true})
     kr_name: string
+    
+    @Column({ length : 1000, nullable: true})
+    thumbnail_image_url: string
 
-    @Column('varchar', {length: 1000, nullable: true})
-    thumbnail_image: string
+    @Column({ type: 'decimal', precision: 10, scale: 2 , nullable: true })
+    recent_trade_price : number
 
-    @Column('decimal', {precision: 10, scale: 2, nullable: true})
-    recent_trade_price: number
+    @Column({ length : 100, nullable: true})
+    model_number : string
 
-    @Column('varchar', {length: 100, nullable: true})
-    model_number: string
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+    release_date : Date
 
-    @Column('timestamp')
-    release_date: Date
+    @Column({ length : 100, nullable: true})
+    color : string
 
-    @Column('varchar', {length: 100, nullable: true})
-    color: string
+    @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+    original_price : number
 
-    @Column('int')
-    category_id: number
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+    public created_at : Date
 
-    @Column('decimal', {precision: 10, scale: 2, nullable: true})
-    original_price: number
+    @ManyToOne(()=>categories, (category)=>category.category, {nullable: false})
+    @JoinColumn({name : 'category_id'})
+    category_product : products
 
-    @CreateDateColumn()
-    created_at: Date
+    @ManyToOne(()=> brands, (brand)=>brand, {nullable: false})
+    @JoinColumn({ name : 'brand_id' })
+    brand_products : products
+
 }
+

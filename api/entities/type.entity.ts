@@ -1,10 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
-@Entity('types')
-export class Type {
-    @PrimaryGeneratedColumn()
-    id: number
+@Entity()
+export class types {
 
-    @Column('varchar', {length: 50, nullable: true})
-    name: string
+    @PrimaryGeneratedColumn({ type:'int' })
+    id! : number
+
+    @Column({ length : 100, nullable: true })
+    name : string
+    
 }
