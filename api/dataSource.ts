@@ -1,15 +1,15 @@
 import { DataSource } from 'typeorm';
-import { Bid } from './entities/bid.entity';
-import { Brand } from './entities/brand.entity';
-import { Category } from './entities/category.entity';
-import { Option } from './entities/option.entity';
-import { Order } from './entities/order.entity';
-import { Post } from './entities/post.entity';
-import { Product } from './entities/product.entity';
-import { Product_Image } from './entities/product_image.entity';
-import { Status } from './entities/status_entity';
-import { Type } from './entities/type.entity';
-import { User } from './entities/user.entity';
+import { bids} from './entities/bid.entity';
+import { brands } from './entities/brand.entity';
+import { categories } from './entities/category.entity';
+import { options } from './entities/option.entity';
+import { orders } from './entities/order.entity';
+import { posts } from './entities/post.entity';
+import { products } from './entities/product.entity';
+import { product_images } from './entities/product_image.entity';
+import { statuses } from './entities/status_entity';
+import { types } from './entities/type.entity';
+import { users } from './entities/user.entity';
 
 const appDataSource = new DataSource(
     {
@@ -19,7 +19,7 @@ const appDataSource = new DataSource(
         username: 'root',
         password: 'jung4038',
         database: 'icecream',
-        entities: [User, Post, Type, Status, Product, Product_Image, Order, Option, Category, Brand, Bid],
+        entities: [users, posts, types, statuses, products, product_images, orders, options, categories, brands, bids],
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
         migrationsRun: true
     }
