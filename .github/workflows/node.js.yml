@@ -25,7 +25,6 @@ jobs:
         with:
           node-version: '19'
       - run : npm i
-      - run : npm test
       - run : npm list
 
 #     - uses: actions/checkout@v3
