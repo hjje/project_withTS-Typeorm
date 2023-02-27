@@ -20,7 +20,13 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - run : ls -al
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '19'
+      - run : npm i
+      - run : npm list
+
 #     - uses: actions/checkout@v3
 #     - name: Use Node.js ${{ matrix.node-version }}
 #       uses: actions/setup-node@v3
