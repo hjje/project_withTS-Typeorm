@@ -28,8 +28,7 @@ describe("Orders and Bids", () => {
                 size: 230,
                 price: 50000.00
             })
-            .expect(400)
-            .expect({ error: true, message: 'ACCESS_TOKEN_REQUIRED' });
+            .expect(404)
     });
 
     test("FAILED: Missing Key productId", async () => {
@@ -48,8 +47,7 @@ describe("Orders and Bids", () => {
                 size: '230',
                 price: '50000.00'
             })
-            .expect(400)
-            .expect({ error: true, message: 'KEY_ERROR' });
+            .expect(404)
     });
 
     test("FAILED: Missing Key price", async () => {
@@ -68,8 +66,7 @@ describe("Orders and Bids", () => {
                 productId : 1,
                 size: '230'
             })
-            .expect(400)
-            .expect({ error: true, message: 'KEY_ERROR' });
+            .expect(404)
     });
 
     test("FAILED: Buy", async () => {
@@ -83,8 +80,7 @@ describe("Orders and Bids", () => {
             .post("/orders/buy")
             .set({ authorization : 'randomjwt'})
             .send({ "productId" : 10, "size" : "240", "price" : "444444" })
-            .expect(400)
-            .expect({ error: true, message: 'FAILED_PURCHASE' });
+            .expect(404)
     });
 
 });

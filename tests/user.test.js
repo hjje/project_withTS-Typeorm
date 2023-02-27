@@ -1,53 +1,96 @@
 const request = require("supertest");
 const axios = require('axios');
+
+jest.mock('axios')
+
 const { createApp } = require("../app");
 const appDataSource = require("../src/models/data-source");
 
-describe("Kakao Login", () => {
-    let app;
+describe('Kakao Sign In', () => {
+  let app;
 
-    beforeAll(async () => {
-        app = createApp();
-        await appDataSource.initialize();
-    });
+  beforeAll(async() => {
+      app = createApp()
+      await appDataSource.initialize()
+      await appDataSource.query(
+          `INSERT INTO
+              users (
+                  nickname,
+                  email,
+                  social_id
+              ) VALUES (
+                  'wecode2',
+                  'wecode2@email.com',
+                  '12345'
+              )`)
+  })
 
-    afterAll(async () => {
-        await appDataSource.query(`SET FOREIGN_KEY_CHECKS = 0`);
-        await appDataSource.query(`TRUNCATE users`);
-        await appDataSource.query(`SET FOREIGN_KEY_CHECKS = 1`);
-        await appDataSource.destroy();
-    });
+  afterAll(async() => {
+      await appDataSource.query(`SET FOREIGN_KEY_CHECKS = 0`)
+      await appDataSource.query(`TRUNCATE users`);
+      await appDataSource.query(`SET FOREIGN_KEY_CHECKS = 1`)
+      await appDataSource.destroy();
 
-    test("FAILED: No Auth Code", async () => {
-        await request(app)
-            .post("/users/login")
-            .expect(400)
-            .expect({ error: true, message: 'MISSING_AUTH_CODE' });
-    });
-        
-    test('SUCCESS: Kakao Login', async () => {
-        axios.get = jest.fn().mockReturnValue({
-            data: 'bypass first axios.get'
-        })
+  })
 
-        axios.get = jest.fn().mockReturnValue({
-            data: {
-                id: 1010101010,
-                properties: {
-                  nickname: "닉네임",
-                  profile_image: "이미지.jpg"
-                },
-                kakao_account: {
-                  profile: {
-                    nickname: "닉네임",
-                  },
-                  email: "email@test.com",
-                },
-              }
-        })
+  test('SUCCESS: created new user', async() => {
 
-        await request(app)
-            .post("/users/login?code=testAuthCode")
-            .expect(200);
-    })
-});
+      const mockKakaoUserInfo = {
+          sub: '12351',
+          nickname: 'wecode',
+          email: 'wecode@email.com',
+          gender: 'male'
+      }
+      const mockKakaoTokenData = {
+          data : {
+              access_token: '123123123132'
+          }
+      }
+
+      axios.mockReturnValue(mockKakaoTokenData)
+      axios.mockReturnValue(mockKakaoUserInfo)
+  
+      request(app)
+          .get('/users/signin')
+          .set({
+              Authorization: 'code'
+          })
+          .expect(200)
+  })
+
+  test('SUCCESS: if our service user, give JWT token', async() => {
+      
+      const mockKakaoUserInfo = {
+          sub: '12345',
+          nickname: 'wecode2',
+          email: 'wecode2@email.com',
+          gender: 'male'
+      }
+      const mockKakaoTokenData = {
+          data : {
+              access_token: '123123123132'
+          }
+      }
+
+      axios.mockReturnValue(mockKakaoTokenData)
+      axios.mockReturnValue(mockKakaoUserInfo)
+
+      request(app)
+          .get('/users/sign')
+          .set({
+              Authorization: 'code'
+          })
+          .expect(200)
+  })
+
+  test('FAILED: invalid code', async() => {
+      request(app)
+          .get('/users/signin')
+          .set({
+              Authorization: ''
+          })
+          .expect(500)
+          .expect({message: 'Request failed with status code 400'})
+  })    
+})
+
