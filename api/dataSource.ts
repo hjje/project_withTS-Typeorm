@@ -10,15 +10,18 @@ import { product_images } from './entities/product_image.entity';
 import { statuses } from './entities/status_entity';
 import { types } from './entities/type.entity';
 import { users } from './entities/user.entity';
+import dotenv from 'dotenv'
+
+dotenv.config();
 
 const appDataSource = new DataSource(
     {
         type: 'mysql',
         host: '127.0.0.1',
         port: 3306,
-        username: 'root',
-        password: 'jung4038',
-        database: 'icecream',
+        username: process.env.TYPEORM_USERNAME,
+        password: process.env.TYPEORM_PASSWORD,
+        database: process.env.TYPEORM_DATABASE,
         entities: [users, posts, types, statuses, products, product_images, orders, options, categories, brands, bids],
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
         migrationsRun: true
