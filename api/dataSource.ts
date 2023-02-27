@@ -10,9 +10,7 @@ import { product_images } from './entities/product_image.entity';
 import { statuses } from './entities/status_entity';
 import { types } from './entities/type.entity';
 import { users } from './entities/user.entity';
-import dotenv from 'dotenv'
-
-dotenv.config();
+require("dotenv").config();
 
 const appDataSource = new DataSource(
     {
