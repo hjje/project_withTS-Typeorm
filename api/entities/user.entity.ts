@@ -7,7 +7,7 @@ export class users {
     id! : number
 
     @Column({ length : 100, nullable: true})
-    name : string
+    nickname : string
 
     @Column({ length : 100, nullable: true})
     email : string
@@ -25,10 +25,10 @@ export class users {
     point : number
 
     @Column({ type:'bigint', nullable: true })
-    social_id : number
+    social_id : number | string
 
     @Column({ type:'int', nullable: true })
-    social_type_id : number
+    social_type_id : number | string
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     public created_at: Date
