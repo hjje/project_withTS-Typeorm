@@ -1,13 +1,13 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Migration1677488502655 implements MigrationInterface {
-    name = 'Migration1677488502655'
+export class Migration1677739378898 implements MigrationInterface {
+    name = 'Migration1677739378898'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
             CREATE TABLE \`users\` (
                 \`id\` int NOT NULL AUTO_INCREMENT,
-                \`name\` varchar(100) NULL,
+                \`nickname\` varchar(100) NULL,
                 \`email\` varchar(100) NULL,
                 \`password\` binary NULL,
                 \`profile_image_url\` varchar(1000) NULL,
