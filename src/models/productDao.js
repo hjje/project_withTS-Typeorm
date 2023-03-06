@@ -175,7 +175,7 @@ const getConstantProductDataById = async (productId) => {
     main[0].buyNow = x.price
     main[0].sellNow = y.price
     main[0].images = imgArr
-    return main
+    return main[0]
 }
 const getProductTradeDataById = async (productId) => {
     await dataSource.query(`
