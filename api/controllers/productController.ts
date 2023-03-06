@@ -2,14 +2,6 @@ import { Request, Response } from 'express'
 import * as productService from '../services/productService'
 import { catchAsync } from '../utils/error'
 
-interface Data {
-
-}
-
-interface Result {
-    
-}
-
 interface Product {
     categoryId: number,
     size: string,

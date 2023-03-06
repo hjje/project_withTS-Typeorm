@@ -1,9 +1,9 @@
 import express, { Router } from 'express';
 import * as userController from '../controllers/userController';
 
-const routes: Router = express.Router();
+const routes: Router = express.Router()
 
-routes.post('/login', userController.kakaoLogin)
+routes.post('/login', userController.socialLogin)
 routes.get('/info/:id', userController.getUserInfo)
 
 export { routes };

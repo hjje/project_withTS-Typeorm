@@ -12,6 +12,7 @@ const getUserInfo = async(userId) => {
     return result
 }
 
+// test code for user info by kakao id
 const getUserByKakaoId = async(id: number): Promise<users> => {
     const user = await userRepository.findOneBy(
         {
@@ -21,23 +22,28 @@ const getUserByKakaoId = async(id: number): Promise<users> => {
     return user
 }
 
-const checkRegisteredAlready = async(kakaoId: number): Promise<any> => {
-        const user = await userRepository.findOneBy(
-            {
-                social_id: kakaoId
-            }
-        )
-        return user
+const checkRegisteredAlready = async(socialId: number|string, socialTypeId: number): Promise<any> => {
+
+    const user = await userRepository.find(
+        {
+            where: {
+                social_id: socialId,
+                social_type_id: socialTypeId
+            }    
+        }
+    )
+    return user
 }
 
-const createUser = async(kakaoId: number, email: string, profile_image: string, nickname: string): Promise<void> => {
+const createUser = async(socialId: number, socialTypeId: number, email: string, profile_image: string, nickname: string): Promise<void> => {
     try{
         const user = userRepository.create(
             {
-                social_id: kakaoId,
+                social_id: socialId,
+                social_type_id: socialTypeId,
                 email,
                 profile_image_url: profile_image,
-                name: nickname
+                nickname: nickname
             }
         )
         await userRepository.save(user)
