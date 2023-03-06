@@ -6,30 +6,7 @@
 
 # 개발 기간
 
-- 22.12.23~23.01.05 (2주)
-</br>
-
-# 깃허브 링크
-
-[팀 프로젝트 프론트엔드 Github](https://github.com/wecode-bootcamp-korea/40-2nd-ICE-CREAM-frontend)
-
-[팀 프로젝트 백엔드 Github](https://github.com/wecode-bootcamp-korea/40-2nd-ICE-CREAM-backend)
-
-</br>
-
-# 개발 인원 및 파트
-
-| 김태윤 (Project Manager) | <a href="https://github.com/Taeyooooon"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=GitHub&logoColor=white"/></a> |
-| --- | --- |
-| 문다연 | <a href="https://github.com/mundayeonn"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=GitHub&logoColor=white"/></a> |
-| 서혜선 |  <a href="https://github.com/seonday"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=GitHub&logoColor=white"/></a> |
-
-</br>
-
-| 임다슬 (Product Manager) | <a href="https://github.com/gkgkda"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=GitHub&logoColor=white"/></a> |
-| --- | --- |
-| 전민식 | <a href="https://github.com/minsicko"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=GitHub&logoColor=white"/></a> |
-
+- 23.02.06~ 진행중
 </br>
 
 # 기술 스택
