@@ -5,26 +5,25 @@ name: deploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
   build:
-    build-and-deploy:
-      runs-on: ubuntu-latest
+
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [19.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-         node-version: ${{ matrix.node-version }}
+          node-version: '19'
 
        - name: 환경변수 설정
         working-directory: ./
