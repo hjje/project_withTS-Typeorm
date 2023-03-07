@@ -22,7 +22,7 @@ const appDataSource = new DataSource(
         database: process.env.TYPEORM_DATABASE,
         entities: [users, posts, types, statuses, products, product_images, orders, options, categories, brands, bids],
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-        migrationsRun: true
+        migrationsRun: false
     }
 )
 

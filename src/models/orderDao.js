@@ -35,12 +35,14 @@ const addBuyOrder = async (productId, size, price, userId) => {
                     buyer_id,
                     seller_id,
                     bid_id,
-                    amount
+                    amount,
+                    status_id
                 ) VALUES (
                     ?,
                     ?,
                     ?,
-                    ?
+                    ?,
+                    3
                 )
         `, [userId, getBidData[0].user_id, getBidData[0].id, price]
         )
