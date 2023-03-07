@@ -36,7 +36,7 @@ jobs:
       - run : npm i
       - run : npm list
 
-        - name: ✨ 빌드 과정을 시작
+        - name: 빌드 과정 시작
         working-directory: ./
         run: yarn run build
 
