@@ -1,46 +1,7 @@
-# # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-# name: deploy
-
-# on:
-#   push:
-#     branches: [ "main" ]
-#   pull_request:
-#     branches: [ "main" ]
-
-# jobs:
-#   build:
-
-#     runs-on: ubuntu-latest
-
-#     strategy:
-#       matrix:
-#         node-version: [19.x]
-#         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-#     steps:
-#       - uses: actions/checkout@v3
-#       - uses: actions/setup-node@v3
-#         with:
-#           node-version: '19'
-
-#        - name: 환경변수 설정
-#         working-directory: ./
-#         run: |
-#           pwd
-#           touch .env
-#           echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
-#           cat .env
-#       - run : npm i
-#       - run : npm list
-
-#         - name: 빌드 과정 시작
-#         working-directory: ./
-#         run: npm run build --if-present
-
-
-name: Node.js CI
+name: deploy
 
 on:
   push:
@@ -63,5 +24,47 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '19'
-      - run : npm i
+
+       - name: 환경변수 파일 생성 및 설정
+        working-directory: ./
+        run: |
+          pwd
+          touch .env.dev
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.dev
+          echo "PORT=${{ secrets.DATABASE_URL }}" >> .env.dev
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env.dev
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env.dev
+          cat .env.dev
+      - run : npm ci
       - run : npm list
+
+#         - name: 빌드 과정 시작
+#         working-directory: ./
+#         run: npm run build --if-present
+
+
+# name: Node.js CI
+
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
+
+# jobs:
+#   build:
+
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       matrix:
+#         node-version: [19.x]
+#         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: '19'
+#       - run : npm ci
+#       - run : npm list
