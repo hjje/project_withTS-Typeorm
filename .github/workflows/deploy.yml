@@ -25,22 +25,40 @@
 #         with:
 #           node-version: '19'
 
-#        - name: 환경변수 파일 생성 및 설정
-#         working-directory: ./
-#         run: |
-#           pwd
-#           touch .env.dev
-#           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.dev
-#           echo "PORT=${{ secrets.DATABASE_URL }}" >> .env.dev
-#           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env.dev
-#           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env.dev
-#           cat .env.dev
-#       - run : npm ci
-#       - run : npm list
+      #  - name: 환경변수 파일 생성 및 설정
+      #   working-directory: ./
+      #   run: |
+      #     pwd
+      #     touch .env.dev
+      #     echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.dev
+      #     echo "PORT=${{ secrets.DATABASE_URL }}" >> .env.dev
+      #     echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+      #     echo JWT_ALGO=${{ secrets.ALGORITHM }} >> .env
+      #     cat .env.dev
 
-#         - name: 빌드 과정 시작
-#         working-directory: ./
-#         run: npm run build --if-present
+      #   - name: 빌드 과정 시작
+      #   working-directory: ./
+      #   run: npm run build --if-present
+
+      #   - name: zip file
+      #     run: zip -r hous.zip ./build ./scripts ./appspec.yml ./.env.dev ./package.json
+
+      #   - name: AWS configure credentials
+      #     uses: aws-actions/configure-aws-credentials@v1
+      #     with:
+      #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #       aws-region: ap-northeast-2
+
+      #   - name: Upload to S3
+      #     run: aws s3 cp --region ap-northeast-2 ./hous.zip s3://hous-build/deploy/
+
+      #   - name: AWS CodeDeploy
+      #     run: aws deploy create-deployment
+      #       --application-name hous-codedeploy
+      #       --deployment-config-name CodeDeployDefault.OneAtATime
+      #       --deployment-group-name GROUP
+      #       --s3-location bucket=hous-build,bundleType=zip,key=deploy/hous.zip
 
 
 name: Node.js CI
