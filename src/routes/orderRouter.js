@@ -9,6 +9,7 @@ routes.post('/addbuybid', loginRequired, orderController.addBuyBid)
 routes.post('/sell', loginRequired, orderController.addSellOrder)
 routes.post('/addsellbid', loginRequired, orderController.addSellBid)
 
+
 module.exports = {
     routes
 }

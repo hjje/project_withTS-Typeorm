@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "nodemon --exec node --loader ts-node/esm api/server.ts",
     "test": "DOTENV_CONFIG_PATH=.env.test jest --no-cache --watchAll --setupFiles=dotenv/config",
-    "start": "nodemon build/server.js",
+    "start": "nodemon server.js",
     "migrate:up": "npx dbmate up"
   },
   "repository": {
